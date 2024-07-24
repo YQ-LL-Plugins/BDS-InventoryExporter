@@ -1,35 +1,24 @@
-# LeviLamina Mod Template
+# InventoryExporter
 
-A LeviLamina mod template
-
-This mod is a template for developing LeviLamina mods.
-
-## Install
-
-Generate a new repository from this template.
+A LeviLamina mod to export all player's inventory and player data to NBT files.
 
 ## Usage
 
-Before using this mod template, make sure that you have installed XMake and a Minecraft Bedrock Server with LeviLamina.
+1. Install
+2. Start BDS
+3. All player's PlayerData / Inventory / EnderChest of current save will be exported to `plugins\InventoryExporter\saved` as Binary NBT files. 
+   Filename is the format of `<uuid>-<type>.nbt`
 
-1. Clone the new repository into a local folder.
+## Tips
 
-1. Change the mod name and the expected LeviLamina version in `xmake.lua`.
+You can create a `plugins\InventoryExporter\uuid-name_map.txt` with contents like below:
 
-1. Add your code.
+```
+7ffb1266-3880-355a-bc65-aee375402f1d steve
+e4d83485-895a-350c-bbf2-bb32cecb135d alex
+0dc2d4c4-b8c5-3276-bbd9-e3a125e8c8a2 john
+ca7ebc16-c09c-3b03-b7bf-a3dbc0aa6efb jack
+...
+```
 
-1. Run `xmake repo -u` in the root of the repository.
-
-1. Run `xmake` to build the mod.
-
-Now the build is complete at `bin/`.
-
-## Contributing
-
-Ask questions by creating an issue.
-
-PRs accepted.
-
-## License
-
-CC0-1.0 © LiteLDev
+then, plugin will replace those UUIDs in filename with more readable player names if matched in this file.
