@@ -1,0 +1,6 @@
+{
+    "name": "InventoryExporter",
+    "entry": "InventoryExporter.dll",
+    "version": "0.1.0",
+    "type": "native"
+}

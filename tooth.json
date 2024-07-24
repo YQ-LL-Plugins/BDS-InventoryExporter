@@ -1,0 +1,26 @@
+{
+    "format_version": 2,
+    "tooth": "InventoryExporter",
+    "version": "0.1.0",
+    "info": {
+        "name": "InventoryExporter",
+        "description": "Export all players inventories and endchests",
+        "author": "yqs112358",
+        "tags": [
+            "levilamina",
+            "mod"
+        ]
+    },
+    "asset_url": "My Asset Url",
+    "prerequisites": {
+        "github.com/LiteLDev/LeviLamina": "latest"
+    },
+    "files": {
+        "place": [
+            {
+                "src": "InventoryExporter/*",
+                "dest": "plugins/InventoryExporter/"
+            }
+        ]
+    }
+}
