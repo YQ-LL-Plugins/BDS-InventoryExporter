@@ -48,3 +48,28 @@ std::string getServerIdFromUuid(mce::UUID const& uuid) {
     }
     return DBTag->getString("ServerId");
 }
+
+std::vector<mce::UUID> getAllUuids(bool includeOfflineSignedId) {
+    std::vector<mce::UUID> uuids;
+    globalDBStorage->forEachKeyWithPrefix(
+        "player_",
+        DBHelpers::Category::Player,
+        [&uuids, includeOfflineSignedId](std::string_view key_left, std::string_view data) {
+            if (key_left.size() == 36) {
+                auto  tag   = CompoundTag::fromBinaryNbt(data);
+                auto& msaId = tag->getString("MsaId");
+                if (!msaId.empty()) {
+                    auto uuid = mce::UUID::fromString(msaId);
+                    uuids.push_back(uuid);
+                } else if (includeOfflineSignedId) {
+                    auto& selfSignedId = tag->getString("SelfSignedId");
+                    if (!selfSignedId.empty()) {
+                        auto uuid = mce::UUID::fromString(selfSignedId);
+                        uuids.push_back(uuid);
+                    }
+                }
+            }
+        }
+    );
+    return uuids;
+}

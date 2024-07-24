@@ -2,6 +2,8 @@
 #include "DBStorage.h"
 #include "UuidUtils.h"
 #include <filesystem>
+#include <map>
+#include <fstream>
 
 std::unique_ptr<CompoundTag> getOfflineNbt(std::string const& serverId) {
     if (!globalDBStorage->hasKey(serverId, DBHelpers::Category::Player)) {
@@ -81,11 +83,46 @@ bool savePlayerData(mce::UUID const& uuid, const std::string &playerName = "") {
     return true;
 }
 
+std::map<std::string, std::string> loadUuidNameMap() {
+    std::ifstream fin("./plugins/InventoryExporter/uuid-name_map.txt");
+    if (!fin.is_open()) {
+        return {};
+    }
+
+    std::map<std::string, std::string> result;
+    std::string line;
+    while (std::getline(fin, line)) {
+        // strip
+        line.erase(line.find_last_not_of(" \n\r\t")+1);
+        line.erase(0, line.find_first_not_of(" \n\r\t"));
+
+        if(line.empty() || line[0] == '#')
+            continue;
+        size_t splitPos = line.find_first_of(" \t");
+
+        std::string uuid = line.substr(0, splitPos);
+        std::string name = line.substr(splitPos + 1);
+        result[uuid] = name;
+    }
+    fin.close();
+    return result;
+}
+
 void exportInventories() {
     // clean up
     std::error_code ec;
     std::filesystem::remove_all(std::filesystem::path("./plugins/InventoryExporter/saved"), ec);
 
-    std::string uuid = "9bcaac62-8e99-372f-b416-cb6f47130479";
-    savePlayerData(uuid, "yqs112358");
+    std::map<std::string, std::string> uuidNameMap = loadUuidNameMap();
+ 
+    auto uuids = getAllUuids(true);
+    for(auto &uuid : uuids)
+    {
+        std::string uuidStr = uuid.asString();
+        if(uuidNameMap.contains(uuidStr))
+            savePlayerData(uuid, uuidNameMap[uuidStr]);
+        else
+            savePlayerData(uuid);
+    }
+    logger.info("All players inventory exported.");
 }
