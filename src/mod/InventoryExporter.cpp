@@ -1,6 +1,6 @@
 #include "IncludeAll.h"
 #include "DBStorage.h"
-#include "ServerID.h"
+#include "UuidUtils.h"
 #include <filesystem>
 
 std::unique_ptr<CompoundTag> getOfflineNbt(std::string const& serverId) {
